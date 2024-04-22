@@ -1,7 +1,9 @@
-import smtplib
-def send_email(subject, message, from_addr, to_addr):
-    msg = f"Subject: {subject}\r\n{message}"
-    server = smtplib.SMTP("")
-    server.sendmail(from_addr, to_addr, msg)
-    server.quit()
-send_email()
+message = """
+<html>
+<body>
+    <h2>Welcome, Jmail User!</h2>
+    <p>This is an email sent from Jmail.</p>
+    <p>Your email address is: example@email.com</p>
+</body>
+</html>
+"""
