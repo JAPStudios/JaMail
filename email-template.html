@@ -1,23 +1,23 @@
 const nodemailer = require('nodemailer');
 let transporter = nodemailer.createTransport({
-  host: 'your_smtp_server',
-  port: 666,
+  host: '',
+  port: 587,
   secure: true,
   auth: {
-    user: 'your_email@example.com',
-    pass: 'your_password'
+    user: '',
+    pass: ''
   }
 });
 let mailOptions = {
-  from: 'your_email@example.com',
-  to: 'recipient_email@example.com',
+  from: '',
+  to: '',
   subject: 'Hello from Jmail!',
   html: `
     <html>
     <body>
       <h2>Welcome, Jmail User!</h2>
       <p>This is an email sent from Jmail.</p>
-      <p>Your email address is: example@email.com</p>
+      <p>Your email address is: </p>
     </body>
     </html>
   `
