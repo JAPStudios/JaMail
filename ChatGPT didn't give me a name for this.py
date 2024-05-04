@@ -1,3 +1,4 @@
+cd path/to/email_importer_script
 pip install imaplib
 user_email = 'your_email@gmail.com'
 user_password = 'your_password'
