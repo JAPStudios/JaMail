@@ -7,7 +7,7 @@ def import_emails_from_service(service_name, user_email, user_password):
         IMAP_PORT = 993
         mail = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT)
         mail.login(user_email, user_password)
-        mail.select('inbox')  # Choose inbox for Gmail
+        mail.select('inbox')
     try:
         status, data = mail.search(None, 'ALL')
         for num in data[0].split():
