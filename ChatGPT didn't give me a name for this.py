@@ -3,6 +3,7 @@ pip install google-cloud-firestore
 import imaplib
 import email
 import your_database_module
+mail.select('inbox')
 IMAP_SERVER = 'imap.gmail.com'
 IMAP_PORT = 993
 EMAIL = 'your_email@gmail.com'
