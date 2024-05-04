@@ -29,3 +29,33 @@ for num in data[0].split():
 mail.close()
 mail.logout()
 print('Emails imported successfully.')
+import mysql.connector
+db_connection = mysql.connector.connect(
+    host='your_mysql_host',
+    user='your_mysql_user',
+    password='your_mysql_password',
+    database='your_database_name'
+)
+cursor = db_connection.cursor()
+def save_email(sender, subject, body):
+    sql = "INSERT INTO emails (sender, subject, body) VALUES (%s, %s, %s)"
+    values = (sender, subject, body)
+    cursor.execute(sql, values)
+    db_connection.commit()
+cursor.close()
+db_connection.close()
+import psycopg2
+db_connection = psycopg2.connect(
+    host='your_postgresql_host',
+    user='your_postgresql_user',
+    password='your_postgresql_password',
+    database='your_database_name'
+)
+cursor = db_connection.cursor()
+def save_email(sender, subject, body):
+    sql = "INSERT INTO emails (sender, subject, body) VALUES (%s, %s, %s)"
+    values = (sender, subject, body)
+    cursor.execute(sql, values)
+    db_connection.commit()
+cursor.close()
+db_connection.close()
