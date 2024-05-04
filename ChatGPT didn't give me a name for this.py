@@ -1,3 +1,5 @@
+pip install google-cloud-sql
+pip install google-cloud-firestore
 import imaplib
 import email
 import your_database_module
