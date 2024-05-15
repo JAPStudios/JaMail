@@ -187,3 +187,40 @@ Replace 'your_email@gmail.com' and 'your_password' with actual credentials
 user_email = 'your_email@gmail.com'
 user_password = 'your_password'
 import_emails(user_email, user_password)
+import imaplib
+import email
+def import_emails(email_address, password):
+    try:
+        mail = imaplib.IMAP4_SSL('imap.gmail.com')
+        
+        mail.login(email_address, password)
+        
+        mail.select('INBOX')
+        
+        status, data = mail.search(None, 'ALL')
+        
+        if status == 'OK':
+            email_ids = data[0].split()
+            for email_id in email_ids:
+                status, email_data = mail.fetch(email_id, '(RFC822)')
+                
+                if status == 'OK':
+                    raw_email = email_data[0][1]
+                    email_message = email.message_from_bytes(raw_email)
+                    
+                    sender = email_message['From']
+                    subject = email_message['Subject']
+                    
+                    print(f"Sender: {sender}")
+                    print(f"Subject: {subject}")
+        
+        mail.close()
+        mail.logout()
+        
+        print('Emails imported successfully.')
+    except Exception as e:
+        print(f'Error importing emails: {e}')
+Replace 'your_email@gmail.com' and 'your_password' with actual credentials
+user_email = 'your_email@gmail.com'
+user_password = 'your_password'
+import_emails(user_email, user_password)
