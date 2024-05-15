@@ -1,5 +1,7 @@
 cd path/to/email_importer_script
 pip install imaplib
+import email
+import base64
 pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
 user_email = 'your_email@gmail.com'
 user_password = 'your_password'
