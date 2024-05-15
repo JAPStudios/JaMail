@@ -1,5 +1,6 @@
 cd path/to/email_importer_script
 pip install imaplib
+pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
 user_email = 'your_email@gmail.com'
 user_password = 'your_password'
 python email_importer.py
@@ -64,3 +65,52 @@ user_email = 'your_email@gmail.com'
 user_password = 'your_password'
 access_token = 'your_oauth_access_token'
 import_emails_from_service(chosen_service, user_email, user_password, access_token)
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+import base64
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+creds = None
+if os.path.exists('token.json'):
+    creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    else:
+        flow = InstalledAppFlow.from_client_secrets_file(
+            'credentials.json', SCOPES)
+        creds = flow.run_local_server(port=0)
+    with open('token.json', 'w') as token:
+        token.write(creds.to_json())
+service = build('gmail', 'v1', credentials=creds)
+results = service.users().messages().list(userId='me').execute()
+messages = results.get('messages', [])
+for message in messages:
+    msg = service.users().messages().get(userId='me', id=message['id']).execute()
+    headers = msg['payload']['headers']
+    subject = [header['value'] for header in headers if header['name'] == 'Subject'][0]
+    snippet = msg['snippet']
+    print(f"Subject: {subject}\nSnippet: {snippet}\n")
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+import os
+SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
+creds = None
+if os.path.exists('token_drive.json'):
+    creds = Credentials.from_authorized_user_file('token_drive.json', SCOPES)
+if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    else:
+        flow = InstalledAppFlow.from_client_secrets_file(
+            'credentials_drive.json', SCOPES)
+        creds = flow.run_local_server(port=0)
+    with open('token_drive.json', 'w') as token:
+        token.write(creds.to_json())
+drive_service = build('drive', 'v3', credentials=creds)
+results = drive_service.files().list().execute()
+files = results.get('files', [])
+for file in files:
+    print(f"Name: {file['name']}\nID: {file['id']}\n")
