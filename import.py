@@ -3,8 +3,6 @@ pip install imaplib
 import email
 import base64
 pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
-user_email = 'your_email@gmail.com'
-user_password = 'your_password'
 python email_importer.py
 git add email_importer.py
 git commit -m "Update email_importer.py with new credentials"
@@ -63,9 +61,6 @@ def import_emails_from_service(service_name, user_email, user_password, access_t
     else:
         print(f"Service '{service_name}' is not supported.")
 chosen_service = 'Gmail'
-user_email = 'your_email@gmail.com'
-user_password = 'your_password'
-access_token = 'your_oauth_access_token'
 import_emails_from_service(chosen_service, user_email, user_password, access_token)
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -149,9 +144,6 @@ def authenticate_and_import_emails(email_address, password):
     
     except Exception as e:
         print(f'Error importing emails: {e}')
- 'your_email@gmail.com' and 'your_password' with user credentials
-user_email = 'your_email@gmail.com'
-user_password = 'your_password'
 authenticate_and_import_emails(user_email, user_password)
 import imaplib
 import email
@@ -185,9 +177,6 @@ def import_emails(email_address, password):
         print('Emails imported successfully.')
     except Exception as e:
         print(f'Error importing emails: {e}')
-Replace 'your_email@gmail.com' and 'your_password' with actual credentials
-user_email = 'your_email@gmail.com'
-user_password = 'your_password'
 import_emails(user_email, user_password)
 import imaplib
 import email
@@ -222,7 +211,5 @@ def import_emails(email_address, password):
         print('Emails imported successfully.')
     except Exception as e:
         print(f'Error importing emails: {e}')
-Replace 'your_email@gmail.com' and 'your_password' with actual credentials
-user_email = 'your_email@gmail.com'
 user_password = 'your_password'
 import_emails(user_email, user_password)
