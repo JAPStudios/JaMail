@@ -1,3 +1,63 @@
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2.credentials import Credentials
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/drive.readonly']
+flow = InstalledAppFlow.from_client_secrets_file(
+    'client_secret.json', SCOPES)
+creds = flow.run_local_server(port=0)
+with open('token.json', 'w') as token:
+    token.write(creds.to_json())
+import imaplib
+import email
+def import_emails_from_gmail(user_email, user_password):
+    try:
+        mail = imaplib.IMAP4_SSL('imap.gmail.com')
+        mail.login(user_email, user_password)
+        mail.select('inbox')
+        status, data = mail.search(None, 'ALL')
+        if status == 'OK':
+            for num in data[0].split():
+                status, email_data = mail.fetch(num, '(RFC822)')
+                if status == 'OK':
+                    raw_email = email_data[0][1]
+                    email_message = email.message_from_bytes(raw_email)
+                    
+                    sender = email_message['From']
+                    subject = email_message['Subject']
+                    
+                    print(f"Sender: {sender}")
+                    print(f"Subject: {subject}")
+            mail.close()
+            mail.logout()
+            print('Emails imported successfully from Gmail.')
+    except Exception as e:
+        print(f'Error importing emails from Gmail: {e}')
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+def list_drive_files():
+    creds = Credentials.from_authorized_user_file('token.json')
+    service = build('drive', 'v3', credentials=creds)
+    results = service.files().list().execute()
+    files = results.get('files', [])
+    if not files:
+        print('No files found.')
+    else:
+        print('Files:')
+        for file in files:
+            print(f"- {file['name']} (ID: {file['id']})")
+import logging
+logging.basicConfig(filename='app.log', level=logging.ERROR)
+def handle_errors(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logging.error(f"Error occurred: {e}")
+            print("An error occurred. Please check logs for details.")
+    return wrapper
+@handle_errors
+def import_emails(email_address, password):
+    # Your email import code here
+    pass
 cd path/to/email_importer_script
 pip install imaplib
 import email
