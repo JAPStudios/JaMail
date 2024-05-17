@@ -2,44 +2,128 @@ import os
 import imaplib
 import base64
 import email
-import mysql.connector
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.oauth2.credentials import Credentials
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/drive.readonly']
-flow = InstalledAppFlow.from_client_secrets_file(
-    'client_secret.json', SCOPES)
-creds = flow.run_local_server(port=0)
-with open('token.json', 'w') as token:
-    token.write(creds.to_json())
-def import_user_data(user_id):
-    try:
-        connection = mysql.connector.connect(
-            host="Google",
-            user="Google",
-            password="Google",
-            database="Google"
-        )
-        if connection.is_connected():
-            cursor = connection.cursor()
-            query = "SELECT user_id, username, email, created_at FROM users WHERE user_id = %s"
-            cursor.execute(query, (user_id,))
-            user_data = cursor.fetchone()
-            if user_data:
-                print("User Data:")
-                print(f"User ID: {user_data[0]}")
-                print(f"Username: {user_data[1]}")
-                print(f"Email: {user_data[2]}")
-                print(f"Created At: {user_data[3]}")
-            else:
-                print(f"No user found with ID: {user_id}")
-    except mysql.connector.Error as error:
-        print(f"Error connecting to the database: {error}")
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
-user_id_to_import = 123
-import_user_data(user_id_to_import)
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+SERVICE_ACCOUNT_FILE = 'path/to/credentials.json'
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+service = build('gmail', 'v1', credentials=credentials)
+results = service.users().messages().list(userId='me').execute()
+messages = results.get('messages', [])
+
+for message in messages:
+    msg = service.users().messages().get(userId='me', id=message['id']).execute()
+    print(f"Message snippet: {msg['snippet']}")
+import msal
+import requests
+
+# Authentication
+CLIENT_ID = 'your_client_id'
+CLIENT_SECRET = 'your_client_secret'
+AUTHORITY = 'https://login.microsoftonline.com/common'
+SCOPES = ['https://graph.microsoft.com/.default']
+
+app = msal.ConfidentialClientApplication(
+    CLIENT_ID, authority=AUTHORITY, client_credential=CLIENT_SECRET)
+
+result = app.acquire_token_for_client(scopes=SCOPES)
+
+# Fetch emails
+if 'access_token' in result:
+    graph_url = 'https://graph.microsoft.com/v1.0/me/messages'
+    headers = {'Authorization': 'Bearer ' + result['access_token']}
+    response = requests.get(graph_url, headers=headers)
+    emails = response.json().get('value', [])
+    
+    for email in emails:
+        print(f"Email subject: {email['subject']}")
+else:
+    print(f"Error: {result.get('error_description')}")
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+# Authentication
+SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
+SERVICE_ACCOUNT_FILE = 'path/to/credentials.json'
+
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+# Build the Drive service
+service = build('drive', 'v3', credentials=credentials)
+
+# Fetch files
+results = service.files().list(pageSize=10).execute()
+items = results.get('files', [])
+
+for item in items:
+    print(f"File name: {item['name']}, ID: {item['id']}")
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+SCOPES = ['https://www.googleapis.com/auth/documents.readonly']
+SERVICE_ACCOUNT_FILE = 'path/to/credentials.json'
+
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+service = build('docs', 'v1', credentials=credentials)
+
+# Fetch a document
+document_id = 'your_document_id'
+document = service.documents().get(documentId=document_id).execute()
+print(f"Document title: {document.get('title')}")
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+SCOPES = ['https://www.googleapis.com/auth/youtube.readonly']
+SERVICE_ACCOUNT_FILE = 'path/to/credentials.json'
+
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+service = build('youtube', 'v3', credentials=credentials)
+
+# Fetch playlists
+results = service.playlists().list(part='snippet', mine=True).execute()
+playlists = results.get('items', [])
+
+for playlist in playlists:
+    print(f"Playlist title: {playlist['snippet']['title']}")
+import msal
+import requests
+
+# Authentication
+CLIENT_ID = 'your_client_id'
+CLIENT_SECRET = 'your_client_secret'
+AUTHORITY = 'https://login.microsoftonline.com/common'
+SCOPES = ['https://graph.microsoft.com/.default']
+
+app = msal.ConfidentialClientApplication(
+    CLIENT_ID, authority=AUTHORITY, client_credential=CLIENT_SECRET)
+
+result = app.acquire_token_for_client(scopes=SCOPES)
+
+# Fetch files from OneDrive
+if 'access_token' in result:
+    graph_url = 'https://graph.microsoft.com/v1.0/me/drive/root/children'
+    headers = {'Authorization': 'Bearer ' + result['access_token']}
+    response = requests.get(graph_url, headers=headers)
+    files = response.json().get('value', [])
+    
+    for file in files:
+        print(f"File name: {file['name']}, ID: {file['id']}")
+else:
+    print(f"Error: {result.get('error_description')}")
+# Fetch OneNote Notebooks
+if 'access_token' in result:
+    graph_url = 'https://graph.microsoft.com/v1.0/me/onenote/notebooks'
+    headers = {'Authorization': 'Bearer ' + result['access_token']}
+    response = requests.get(graph_url, headers=headers)
+    notebooks = response.json().get('value', [])
+    
+    for notebook in notebooks:
+        print(f"Notebook name: {notebook['displayName']}")
+else:
+    print(f"Error: {result.get('error_description')}")
