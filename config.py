@@ -1,10 +1,10 @@
 class Config:
-    SMTP_SERVER = 'smtp.example.com'
+    SMTP_SERVER = 'https://japbstudios.wixsite.com/jmail'
     SMTP_PORT = 587
     SMTP_USERNAME = 'your_smtp_username'
     SMTP_PASSWORD = 'your_smtp_password'
     ENCRYPTION_METHOD = 'TLS'
-    DATABASE_URL = 'mongodb://localhost:27017/email_service_db'
+    DATABASE_URL = 'https://japbstudios.wixsite.com/jmail'
     MAX_ATTACHMENT_SIZE_MB = 10
     WELCOME_EMAIL_TEMPLATE = """
         Hello {username},
