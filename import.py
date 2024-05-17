@@ -1,4 +1,4 @@
-// The code that rescues ALL data from the user specified Google/Microsoft account not leaving a single thing from a single product/service/website from either company behind for permanent deletion.
+// The code that rescues ALL data from the user specified Google/Microsoft account upon them clicking the icon of either company that they wish to target when importing within the Jmail application not leaving a single thing from a single product/service/website from either company behind for permanent deletion.
 import os
 import imaplib
 import base64
