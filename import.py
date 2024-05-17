@@ -6,7 +6,18 @@ import email
 import requests
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+def authenticate_google_service(service_name, version, scopes, key_file):
+    credentials = service_account.Credentials.from_service_account_file(key_file, scopes=scopes)
+    service = build(service_name, version, credentials=credentials)
+    return service
 import msal
+def authenticate_microsoft_service(client_id, client_secret, authority, scope):
+    app = msal.ConfidentialClientApplication(client_id, authority=authority, client_credential=client_secret)
+    result = app.acquire_token_for_client(scopes=scope)
+    if "access_token" in result:
+        return result['access_token']
+    else:
+        raise Exception("Could not obtain token")
 def backup_google_emails():
     pass
 def backup_google_videos():
