@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 import msal
 def backup_google_emails():
     pass
-def backup_google_files():
+def backup_google_videos():
     pass
 def backup_google_documents():
     pass
@@ -23,13 +23,13 @@ def backup_microsoft_teams_messages():
     pass
 def backup_microsoft_contacts():
     pass
-def backup_onenote_notebooks():
+def backup_onenote():
     pass
-def backup_google_forms_responses():
+def backup_google_forms():
     pass
 def backup_google_sites():
     pass
-def backup_youtube_history():
+def backup_youtube():
     pass
 def backup_browsing_history():
     pass
