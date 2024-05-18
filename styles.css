@@ -1,0 +1,79 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+/* General styling */
+body {
+    background-color: #121212;
+    color: #FFFFFF;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+}
+/* Header styling */
+.header {
+    background-color: #1E1E1E;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header .menu-icon,
+.header .home-icon {
+    background-color: #2C2C2C;
+    border-radius: 50%;
+    padding: 10px;
+    margin-right: 10px;
+}
+.header .search-bar {
+    flex-grow: 1;
+    background-color: #2C2C2C;
+    border: none;
+    color: #FFFFFF;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+.header .filter-button {
+    background-color: #3A3A3A;
+    border: none;
+    color: #FFFFFF;
+    padding: 10px;
+    border-radius: 5px;
+}
+/* Content styling */
+.content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.content .message {
+    color: #AAAAAA;
+    margin: 10px;
+}
+/* Footer navigation styling */
+.footer {
+    background-color: #1E1E1E;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+.footer .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.footer .nav-item img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+}
