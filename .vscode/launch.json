@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Attach to Kubernetes Pod (Python)",
+            "type": "cloudcode.kubernetes",
+            "request": "attach",
+            "language": "Python",
+            "debugPort": 3000,
+            "podSelector": {
+                "app": "Jmail"
+            },
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "https://github.com/JAPStudios/Jmail"
+        },
+        {
             "name": "Cloud Run: Run/Debug Locally",
             "type": "cloudcode.cloudrun",
             "request": "launch",
@@ -15,7 +27,7 @@
             },
             "image": "${workspaceFolderBasename}",
             "service": {
-                "name": "${workspaceFolderBasename}",
+                "name": "${Jmail}",
                 "containerPort": 8080,
                 "resources": {
                     "limits": {
