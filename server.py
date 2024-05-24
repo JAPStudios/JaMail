@@ -1,3 +1,6 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const pool = require('./db');
 const express = require('express');
 const app = express();
 app.post('/login', (req, res) => {
