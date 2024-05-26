@@ -42,3 +42,82 @@
         }
     ]
 }
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+    {"name":"Python: Current File","type":"python","request":"launch","program":"${file}","console":"integratedTerminal","justMyCode":true},
+    {
+        "name": "Run Account and Item Tests",
+        "program": "${workspaceFolder}/storemgr/test.js",
+        "request": "launch",
+        "skipFiles": [
+            "<node_internals>/**"
+        ],
+        "type": "node"
+    },
+
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Downloader",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/index.js",
+            "console": "externalTerminal"
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Jmail",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/spacecomp.js",
+            "console": "externalTerminal"
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Test Store",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/teststore.js",
+            "console": "externalTerminal"
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Search Local Store",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/searchLocal.js",
+            "console": "externalTerminal"
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Migrate Item Store",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/migrateitemstore.js",
+            "console": "externalTerminal"
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Test Screens",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/screens/mainscreen.js",
+            "console": "externalTerminal"
+        }
+    ]
+}
