@@ -1,0 +1,225 @@
+<html>
+<script type="text/javascript" src="/jquery.js">
+</script>
+<script type="text/javascript">
+var albums=[];
+var items=[];
+    $(document).ready( function()
+    {
+        $('#getitems').click(function()
+        {
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/getlist',
+                    dataType: 'json',
+                    data: {},
+                    success: (data) =>
+                    {
+                        items = data;
+                        console.log("got items.");
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("get albums threw error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+        });
+        $('#getalbums').click(function()
+        {
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/albums',
+                    dataType: 'json',
+                    data: {},
+                    success: (data) =>
+                    {
+                        albums = data;
+                        console.log("get albumns returned.");
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("get albums threw error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+        });
+        $('#grabitems').click(function()
+        {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/redownloadstart',
+                    dataType: 'json',
+                    data:  {},
+                    success: (data) =>
+                    {
+                        console.log("kicked off server side download job.");
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("download job error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+        });
+
+        $('#forcerefresh').click(function()
+    {
+        $.ajax(
+                {
+                    type: 'GET',
+                    url: '/forcerefresh',
+                    dataType: 'json',
+                    data: {},
+                    success: (data) =>
+                    {
+                        refreshdata=data;
+                        console.log("force refresh returned.");
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("get albums threw error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+    });
+    $('#upload').click(function()
+        {
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/upload',
+                    dataType: 'json',
+                    data: {},
+                    success: (data) =>
+                    {
+                        console.log('kicked off upload job.')
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("upload threw an error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+        });
+    $('#refreshsizes').click(function ()
+    {
+        $.ajax(
+                {
+                    type: 'GET',
+                    url: '/updatesizes',
+                    dataType: 'json',
+                    data: {},
+                    success: (data) =>
+                    {
+                        console.log('finished update')
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("upload threw an error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+    })
+    $('#userinst').click(function()
+        {
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/userinstance',
+                    dataType: 'json',
+                    data: {},
+                    success: (data) =>
+                    {
+                        console.log('kicked off upload job.')
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("upload threw an error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+        });
+        $('#processHashes').click(function()
+        {
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/processhashes',
+                    dataType: 'json',
+                    data: {},
+                    success: (data) =>
+                    {
+                        console.log('completed hash computation.')
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("threw an error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+        });
+
+        $('#clearsizefail').click(function()
+        {
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/clearsizefail',
+                    dataType: 'json',
+                    data: {},
+                    success: (data) =>
+                    {
+                        console.log('cleared size failure flags.')
+                    },
+                    error: (jq,tx,err) =>
+                    {
+                        console.log("threw an error ");
+                        console.log(tx);
+                        console.log(err);
+                    }        
+                }
+                );
+        });
+        $.get('/info', (data) =>
+        {
+            $('#username').html(data);
+        } )
+    }
+    );
+
+    var refreshdata = null;
+</script>
+<body>
+    Success !<br>
+    Logged in as <span id="username">username</span><br>
+    <a id="getalbums" href="javascript:void(0)">Click to retrieve albums</a><br>
+    <a id="getitems" href="javascript:void(0)">Click to retrieve photo list</a><br>
+    <a id="grabitems" href="javascript:void(0)">Click to re-download items</a><br>
+    <a id="clearsizefail" href="javascript:void(0)">Click to clear size update failures.</a><br>
+    <a id="forcerefresh" href="javascript:void(0)">Force refresh of access token</a><br>
+    <a id="refreshsizes" href="javascript:void(0)">Force size update</a><br>
+    <a id="processHashes" href="javascript:void(0)">Process All Uncomputed Hashes</a><br>
+    <a id="upload" href="javascript:void(0)">Test Upload</a><br>
+    <a id="userinst" href="javascript:void(0)">GetUserInstanceData</a><br>
+</body>
+</html>
