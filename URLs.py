@@ -1,3 +1,9 @@
+from django.contrib import admin
+from django.urls import path, include
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('core/', include('core.urls')),
+]
 from django.urls import path
 from .views import google_auth, google_callback, microsoft_auth, microsoft_callback
 urlpatterns = [
