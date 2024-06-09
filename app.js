@@ -1,3 +1,19 @@
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import GoogleAuth from './components/GoogleAuth';
+import MicrosoftAuth from './components/MicrosoftAuth';
+function App() {
+    return (
+        <Router>
+            <Switch>
+                <Route path="/auth/google" component={GoogleAuth} />
+                <Route path="/auth/microsoft" component={MicrosoftAuth} />
+            </Switch>
+        </Router>
+    );
+}
+export default App;
 const express = require('express');
 const app = express();
 app.listen(3000, () => {
