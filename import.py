@@ -108,14 +108,9 @@ def main():
         else:
             print("\nInvalid choice, try again")
             loop = True
-    # This is taking the data obtained by using the Access Token,
-    # and placing it into its own variable. Then we're deciding what we're going to perform today.
-    # It would've been nice to differ between Access & Refresh tokens, but there's no defined spec.
-    # See: https://tools.ietf.org/html/rfc6750, the max length is generally 255...
 def generate_access_token():
-    # Credit to https://gist.github.com/burnash/6771295#file-get_oauth2_token-py-L23
-    client_id = '280174354411-s5ss17k6bb39ql04nf472fjlteh9nqmv.apps.googleusercontent.com'          # Client ID found in the app, linked to Google
-    client_secret = 'h0gtTSge5BmtHxHOzf83cRdC'                                                      # Client Secret found in the app, linked to Google
+    client_id = '280174354411-s5ss17k6bb39ql04nf472fjlteh9nqmv.apps.googleusercontent.com'
+    client_secret = 'h0gtTSge5BmtHxHOzf83cRdC'                                                      
     flow = OAuth2WebServerFlow(client_id=client_id,
                                client_secret=client_secret,
                                scope='https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/gmail.readonly',
@@ -126,8 +121,8 @@ def generate_access_token():
     print("Refresh Token: %s" % credentials.refresh_token)
     main()
 def generate_access_token2():
-    client_id = input('Input Client ID from App: ')             # Client ID found in the app, linked to Google
-    client_secret = input('Input Client Secret from App: ')     # Client Secret found in the app, linked to Google
+    client_id = input('Input Client ID from App: ')
+    client_secret = input('Input Client Secret from App: ')
     flow = OAuth2WebServerFlow(client_id=client_id,
                                client_secret=client_secret,
                                scope='https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/gmail.readonly',
@@ -138,7 +133,6 @@ def generate_access_token2():
     print("Refresh Token: %s" % credentials.refresh_token)
     main()
 def query_email_api(access_token):
-    # Queries the Email Messages in a Gmail account
     print("This may take a moment...")
     scope = "https://www.googleapis.com/gmail/v1/users/me/messages"
     headers = {
@@ -146,15 +140,7 @@ def query_email_api(access_token):
         'Authorization': 'Bearer ' + access_token
     }
     response = requests.request("GET", scope, headers=headers)
-    response.raise_for_status()                         # Error Checking
-    data = response.json()                              # Checks whether the data is in JSON format
-    dumped = json.dumps(data)                           # Converts response into string
-    gmail_list = json.loads(dumped)                     # Converts string to object
-    msg_count = (len(gmail_list['messages']))           # Counts the amount of message IDs recovered
-    i = 0                                               # This is setting the variables
-    s = 0                                               # In order to increment and stop when too far
-    f = open("emaildata.json", "w")
-    f.close()
+    response.raise_for_status()                         
     while msg_count != i:
         msg_id = gmail_list["messages"][s]["id"]
         s = s + 1
@@ -175,27 +161,19 @@ def query_email_api(access_token):
     print("Successful!")
     main()
 def query_profile_api(access_token):
-    # Queries the Basic Info of Google
     scope = "https://www.googleapis.com/userinfo/v2/me"
     headers = {
         'cache-control': "no-cache",
         'Authorization': 'Bearer ' + access_token
     }
     response = requests.request("GET", scope, headers=headers)
-    # Error Checking
     response.raise_for_status()
-    # Checks whether the data is in JSON format
-    data = response.json()
-    return data
-def write_files(user_response):
-        with open('data.json', 'w') as outfile:
-            json.dump(user_response, outfile, indent=4, sort_keys=True)
 if __name__ == '__main__':
     main()
 def main():
     choice1 = input("Do you have the Access Token? Type Y or N: ")
     if choice1 == 'Y':
-        access_token = input("Enter your Google Access Token: ")  # This is taking the users input
+        access_token = input("Enter your Google Access Token: ")
         choice2 = input("Is this for Profile or Email download? Type P or E:  ")
     elif choice1 == 'N':
         print('You will now be asked to obtain Client ID and Client Secret from the Mobile Device App.')
@@ -210,16 +188,12 @@ def main():
     elif choice2 == 'E':
         user_response = query_email_api(access_token)
         write_files(user_response)
-    # This is taking the data obtained by using the Access Token,
-    # and placing it into its own variable. Then we're deciding what we're going to perform today.
-    # It would've been nice to differ between Access & Refresh tokens, but there's no defined spec.
-    # See: https://tools.ietf.org/html/rfc6750, the max length is generally 255...
 def generate_access_token():
     from oauth2client.client import OAuth2WebServerFlow
     from oauth2client.tools import run_flow
     from oauth2client.file import Storage
-    client_id = input('Input Client ID from App: ')             # Client ID found in the app, linked to Google
-    client_secret = input('Input Client Secret from App: ')     # Client Secret found in the app, linked to Google
+    client_id = input('Input Client ID from App: ')
+    client_secret = input('Input Client Secret from App: ')
     flow = OAuth2WebServerFlow(client_id=client_id,
                                client_secret=client_secret,
                                scope='https://www.googleapis.com/userinfo/v2/me, https://www.googleapis.com/gmail/v1/users/me/messages',
@@ -228,49 +202,24 @@ def generate_access_token():
     credentials = run_flow(flow, storage)
     print("access_token: %s" % credentials.access_token)
     print("Use Access Token that has just been generated, to re-run the script. :) ")
-    # Credit to https://gist.github.com/burnash/6771295#file-get_oauth2_token-py-L23
 def query_email_api(access_token):
-    # Queries the Email Messages in a Gmail account
     scope = "https://www.googleapis.com/gmail/v1/users/me/messages"
     headers = {
         'cache-control': "no-cache",
         'Authorization': 'Bearer ' + access_token
     }
     response = requests.request("GET", scope, headers=headers)
-    # Error Checking
-    response.raise_for_status()
-    # Checks whether the data is in JSON format
-    data = response.json()
     return data
 def query_profile_api(access_token):
-    # Queries the Basic Info of Google
     scope = "https://www.googleapis.com/userinfo/v2/me"
     headers = {
         'cache-control': "no-cache",
         'Authorization': 'Bearer ' + access_token
     }
     response = requests.request("GET", scope, headers=headers)
-    # Error Checking
     response.raise_for_status()
-    # Checks whether the data is in JSON format
-    data = response.json()
-    return data
-def write_files(user_response):
-             with open('data.json', 'w') as outfile:
-                json.dump(user_response, outfile)
 if __name__ == '__main__':
     main()
-def print_menu():
-    print("""
-        ******************************
-        * Google Cloud Data Recovery *
-        ******************************
-        1. Input Google Access Token (Profile Data)
-        2. Input Google Access Token (Email Data)
-        3. Create Google Access Token (No App Data)
-        4. Create Google Access Token (Supplied by App)
-        5. Quit
-            """)
 def main():
     user_response = None
     print_menu()
@@ -293,9 +242,6 @@ def main():
         write_files(user_response)
     main()
 def user_request_access_token():
-    """
-    Generates an OAuth access token by having the user give access to their account (WARNING: USER PERMISSION REQUIRED)
-    """
     client_id = '280174354411-s5ss17k6bb39ql04nf472fjlteh9nqmv.apps.googleusercontent.com'
     client_secret = 'h0gtTSge5BmtHxHOzf83cRdC'
     flow = client.OAuth2WebServerFlow(
@@ -310,11 +256,8 @@ def user_request_access_token():
     print("Refresh Token: %s" % credentials.refresh_token)
     return
 def generate_access_token():
-    """
-    Generates an OAuth access token given a client_id, client_secret and refresh_token stored within an app.
-    """
-    client_id = input('Input Client ID from App: ')  # Client ID found in the app, linked to Google
-    client_secret = input('Input Client Secret from App: ')  # Client Secret found in the app, linked to Google
+    client_id = input('Input Client ID from App: ')
+    client_secret = input('Input Client Secret from App: ')
     refresh_token = input('Input Refresh Token from App: ')
     cred = client.GoogleCredentials(
         access_token=None,
@@ -331,17 +274,9 @@ def generate_access_token():
     print("Access Token: %s" % cred.access_token)
     return
 def query_email_api(access_token):
-    """
-    this queries the Gmail Batch API for Gmail messages.
-    param access_token: an oauth access token
-    return:
-    """
     f = open("emaildata.json", "w+")
     f.close()
     def callback(response):
-        """
-        generic callback function used to deal with the responses from the Batch API.
-        """
         with open('emaildata.json', 'a') as outfile:
             json.dump(response, outfile, indent=4, sort_keys=True)
         return
@@ -374,11 +309,6 @@ def query_email_api(access_token):
     else:
         return
 def query_profile_api(access_token):
-    """
-    This function queries the Google Profile API for OAuth and returns name and details.
-    param access_token: OAuth access token.
-    return data: Returns the response from the Profile API and passes it through to the Json file.
-    """
     scope = "https://www.googleapis.com/userinfo/v2/me"
     headers = {
         'cache-control': "no-cache",
@@ -386,16 +316,6 @@ def query_profile_api(access_token):
     }
     response = requests.request("GET", scope, headers=headers)
     response.raise_for_status()
-    data = response.json()
-    return data
-def write_files(user_response):
-    """
-    Writes generic json blobs to disk
-    param user_response: Generic json blob
-    return:
-    """
-    with open('data.json', 'w') as outfile:
-        json.dump(user_response, outfile, indent=4, sort_keys=True)
     return
 if __name__ == '__main__':
     main()
