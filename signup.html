@@ -86,3 +86,48 @@ app.post('/create-account', (req, res) => {
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
+const express = require('express');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// Mock database to store users
+let users = [];
+// Function to generate a random Jmail address based on legal name
+function generateJmailAddress(legalName) {
+    const hash = crypto.createHash('sha256').update(legalName).digest('hex');
+    return legalName.split(' ').join('.').toLowerCase() + '_' + hash.slice(0, 6) + '@jmail.com';
+}
+// Account creation route
+app.post('/createAccount', async (req, res) => {
+    const { legalName, dateOfBirth, password } = req.body;
+    // Check if required fields are provided
+    if (!legalName || !dateOfBirth || !password) {
+        return res.status(400).json({ error: 'Missing required fields.' });
+    }
+    // Encrypt sensitive data (legal name and date of birth)
+    const encryptedName = crypto.createHash('sha256').update(legalName).digest('hex');
+    const encryptedDob = crypto.createHash('sha256').update(dateOfBirth).digest('hex');
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // Generate a Jmail address
+    const jmailAddress = generateJmailAddress(legalName);
+    // Store user in mock database
+    const newUser = {
+        legalName: encryptedName,
+        dateOfBirth: encryptedDob,
+        password: hashedPassword,
+        jmailAddress: jmailAddress
+    };
+    users.push(newUser);
+    return res.status(201).json({
+        message: 'Account created successfully!',
+        jmailAddress: jmailAddress
+    });
+});
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
