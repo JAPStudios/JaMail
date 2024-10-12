@@ -1,28 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jmail Account Creation</title>
-</head>
-<body>
-    <h1>Create Your Jmail Account</h1>
+    <meta name="viewport"
     <form id="accountCreationForm" action="/createAccount" method="POST">
-        <!-- Personal Information -->
         <label for="fullName">Full Name:</label>
         <input type="text" id="fullName" name="fullName" required><br><br>
         <label for="dob">Date of Birth:</label>
         <input type="date" id="dob" name="dob" required><br><br>
         <label for="idUpload">Upload ID Document:</label>
         <input type="file" id="idUpload" name="idUpload" accept="image/*" required><br><br>
-        <!-- Biometric Verification (placeholder for actual implementation) -->
         <label for="biometricData">Biometric Data:</label>
         <input type="text" id="biometricData" name="biometricData" placeholder="Fingerprint/Face recognition" required><br><br>
-        <!-- Device Information (collected automatically using JS or backend methods) -->
         <input type="hidden" id="deviceInfo" name="deviceInfo" value="">
         <label for="email">Jmail Address:</label>
         <input type="text" id="email" name="email" placeholder="Generated Email Address" disabled><br><br>
-        <button type="submit">Create Account</button>
     </form>
     <script>
         // Function to generate a Jmail address based on the full name and date of birth
@@ -40,8 +29,6 @@
         // Mock function to capture device information (can be extended for real device fingerprinting)
         document.getElementById('deviceInfo').value = navigator.userAgent; // Example, real device fingerprints would be more complex
     </script>
-</body>
-</html>
 // Assuming we are using Node.js and Express for backend setup
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -85,130 +72,4 @@ app.post('/create-account', (req, res) => {
 // Start the server
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
-});
-const express = require('express');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// Mock database to store users
-let users = [];
-// Function to generate a random Jmail address based on legal name
-function generateJmailAddress(legalName) {
-    const hash = crypto.createHash('sha256').update(legalName).digest('hex');
-    return legalName.split(' ').join('.').toLowerCase() + '_' + hash.slice(0, 6) + '@jmail.com';
-}
-// Account creation route
-app.post('/createAccount', async (req, res) => {
-    const { legalName, dateOfBirth, password } = req.body;
-    // Check if required fields are provided
-    if (!legalName || !dateOfBirth || !password) {
-        return res.status(400).json({ error: 'Missing required fields.' });
-    }
-    // Encrypt sensitive data (legal name and date of birth)
-    const encryptedName = crypto.createHash('sha256').update(legalName).digest('hex');
-    const encryptedDob = crypto.createHash('sha256').update(dateOfBirth).digest('hex');
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // Generate a Jmail address
-    const jmailAddress = generateJmailAddress(legalName);
-    // Store user in mock database
-    const newUser = {
-        legalName: encryptedName,
-        dateOfBirth: encryptedDob,
-        password: hashedPassword,
-        jmailAddress: jmailAddress
-    };
-    users.push(newUser);
-    return res.status(201).json({
-        message: 'Account created successfully!',
-        jmailAddress: jmailAddress
-    });
-});
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jmail Account Creation</title>
-</head>
-<body>
-    <h1>Create Your Jmail Account</h1>
-    <form id="accountCreationForm" action="/createAccount" method="POST" enctype="multipart/form-data">
-        <label for="fullName">Full Name:</label>
-        <input type="text" id="fullName" name="fullName" required><br><br>
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required><br><br>
-        <label for="idUpload">Upload ID Document:</label>
-        <input type="file" id="idUpload" name="idUpload" accept="image/*" required><br><br>
-        <label for="biometricData">Biometric Data:</label>
-        <input type="text" id="biometricData" name="biometricData" placeholder="Fingerprint/Face recognition" required><br><br>
-        <button type="submit">Create Account</button>
-    </form>
-</body>
-</html>
-const express = require('express');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const multer = require('multer'); // For file uploads (ID documents)
-const path = require('path');
-const fs = require('fs');
-// Configure Express app
-const app = express();
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-// File storage configuration for ID upload
-const upload = multer({ dest: 'uploads/' });
-// Mock database (replace with actual database connection)
-let users = [];
-// Function to encrypt data
-function encryptData(data) {
-    return crypto.createHmac('sha256', 'a_secure_key').update(data).digest('hex');
-}
-// Function to generate Jmail address
-function generateJmailAddress(fullName) {
-    const hash = crypto.createHash('sha256').update(fullName).digest('hex');
-    return fullName.split(' ').join('.').toLowerCase() + '_' + hash.slice(0, 6) + '@jmail.com';
-}
-// Handle account creation
-app.post('/createAccount', upload.single('idUpload'), async (req, res) => {
-    const { fullName, dob, biometricData } = req.body;
-    const password = 'tempPassword'; // Use actual password from user input in real scenario
-    // Validate required fields
-    if (!fullName || !dob || !req.file || !biometricData) {
-        return res.status(400).json({ error: 'All fields are required.' });
-    }
-    // Encrypt sensitive data
-    const encryptedName = encryptData(fullName);
-    const encryptedDob = encryptData(dob);
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // Generate a Jmail address
-    const jmailAddress = generateJmailAddress(fullName);
-    // Store user data in mock database
-    const newUser = {
-        fullName: encryptedName,
-        dob: encryptedDob,
-        biometricData: encryptData(biometricData),
-        password: hashedPassword,
-        jmailAddress: jmailAddress,
-        idDocumentPath: req.file.path // Store the file path for the uploaded ID
-    };
-    users.push(newUser);
-    // Respond with success and generated Jmail address
-    res.status(201).json({
-        message: 'Account created successfully!',
-        jmailAddress: jmailAddress
-    });
-});
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
 });
