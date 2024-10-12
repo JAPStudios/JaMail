@@ -42,3 +42,47 @@
     </script>
 </body>
 </html>
+// Assuming we are using Node.js and Express for backend setup
+const express = require('express');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const app = express();
+// Use bodyParser middleware to handle form data
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+// A simple database mock (replace with actual database connection)
+const users = [];
+// Function to encrypt user data (you can replace this with a more secure solution)
+function encryptData(data) {
+    return crypto.createHmac('sha256', 'a_secure_key').update(data).digest('hex');
+}
+// Handle account creation form submission
+app.post('/create-account', (req, res) => {
+    const { legalName, dateOfBirth, email, password } = req.body;
+    // Check if the user already exists
+    const existingUser = users.find(user => user.email === email);
+    if (existingUser) {
+        return res.status(400).send('Email already in use.');
+    }
+    // Encrypt the password
+    const encryptedPassword = bcrypt.hashSync(password, 10);
+    // Encrypt sensitive data (like DOB, name)
+    const encryptedDOB = encryptData(dateOfBirth);
+    const encryptedName = encryptData(legalName);
+    // Create new user and store in the "database"
+    const newUser = {
+        legalName: encryptedName,
+        dateOfBirth: encryptedDOB,
+        email,
+        password: encryptedPassword,
+        jmailAddress: `${legalName.split(' ').join('.').toLowerCase()}@jmail.com` // Auto-generate email
+    };
+    users.push(newUser);
+    // Respond with success
+    res.status(201).send('Account successfully created.');
+});
+// Start the server
+app.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
